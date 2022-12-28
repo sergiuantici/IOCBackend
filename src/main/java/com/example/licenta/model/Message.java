@@ -3,6 +3,7 @@ package com.example.licenta.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -10,19 +11,14 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "user")
-public class User {
-    String firstName,lastName,email,password,role;
-    private Long id;
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
+@Table(name = "message")
+public class Message {
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long getId() {
-        return id;
-    }
+    Long id;
+
+    Long fromId,toId;
+    String text;
+    LocalDateTime time;
 }
