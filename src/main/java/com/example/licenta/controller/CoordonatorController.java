@@ -35,7 +35,7 @@ public class CoordonatorController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getLocuriLibere(@RequestParam Long id){
+    public ResponseEntity<?> getLocuriLibere(@PathVariable Long id){
         return new ResponseEntity<>(coordonatorService.getLocuriLibere(id),HttpStatus.OK);
     }
 
