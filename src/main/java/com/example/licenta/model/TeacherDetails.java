@@ -16,6 +16,10 @@ public class TeacherDetails {
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String grad;
+    private String temeInteres;
+    private Long locuri;
+    private Long locuriLibere;
 
     public void setId(Long id) {
         this.id = id;

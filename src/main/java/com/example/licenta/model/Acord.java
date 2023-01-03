@@ -18,4 +18,7 @@ public class Acord {
     String documentUrl;
     LocalDateTime time;
 
+    public Acord(StudentTeacherId studentTeacherId) {
+        id=studentTeacherId;
+    }
 }
