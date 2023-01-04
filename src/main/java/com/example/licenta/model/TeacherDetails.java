@@ -1,5 +1,6 @@
 package com.example.licenta.model;
 
+import jdk.jfr.Name;
 import lombok.*;
 
 import javax.persistence.*;
@@ -20,12 +21,14 @@ public class TeacherDetails {
     private String temeInteres;
     private Long locuri;
     private Long locuriLibere;
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 
     public void setId(Long id) {
         this.id = id;
     }
 
-    @Id
     public Long getId() {
         return id;
     }

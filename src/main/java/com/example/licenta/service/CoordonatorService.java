@@ -54,4 +54,8 @@ public class CoordonatorService {
         Stream<Long> longStream = acordRepository.findAllByTeacherId(teacherId).stream().map(e -> e.getId().getStudentId());
         return userRepository.findAllById(longStream.collect(Collectors.toList()));
     }
+
+    public List<TeacherDetails> getTeachers(){
+        return teacherRepository.findAll();
+    }
 }
