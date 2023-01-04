@@ -1,17 +1,17 @@
 package com.example.licenta.service;
 
-import com.example.licenta.model.Acord;
-import com.example.licenta.model.Coordonare;
-import com.example.licenta.model.StudentTeacherId;
-import com.example.licenta.model.TeacherDetails;
+import com.example.licenta.model.*;
 import com.example.licenta.repository.AcordRepository;
 import com.example.licenta.repository.CoordonationRepository;
 import com.example.licenta.repository.TeacherRepository;
+import com.example.licenta.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class CoordonatorService {
@@ -22,6 +22,8 @@ public class CoordonatorService {
     CoordonationRepository coordonationRepository;
     @Resource
     TeacherRepository teacherRepository;
+    @Resource
+    UserRepository userRepository;
     public void acceptRequest(StudentTeacherId studentTeacherId) {
         if (acordRepository.existsById(studentTeacherId)) {
             coordonationRepository.save(new Coordonare(studentTeacherId));
@@ -40,11 +42,16 @@ public class CoordonatorService {
         else return byId.get();
     }
 
-    public List<Acord> findAllAcords() {
-        return acordRepository.findAll();
+    public List<Acord> findAllAcords(Long teacherId) {
+        return acordRepository.findAllByTeacherId(teacherId);
     }
 
     public Long getLocuriLibere(Long id) {
         return teacherRepository.getReferenceById(id).getLocuriLibere();
+    }
+
+    public List<User> getStudents(Long teacherId) {
+        Stream<Long> longStream = acordRepository.findAllByTeacherId(teacherId).stream().map(e -> e.getId().getStudentId());
+        return userRepository.findAllById(longStream.collect(Collectors.toList()));
     }
 }

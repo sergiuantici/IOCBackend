@@ -1,5 +1,6 @@
 package com.example.licenta.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import javax.persistence.*;
@@ -12,7 +13,10 @@ import javax.persistence.*;
 @Entity
 @Table(name = "user")
 public class User {
-    String firstName,lastName,email,password,role;
+
+    String firstName,lastName,email;
+    String password;
+    String role;
     private Long id;
 
     public void setId(Long id) {
