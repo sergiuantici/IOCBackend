@@ -1,6 +1,5 @@
 package com.example.licenta.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import javax.persistence.*;
@@ -11,21 +10,22 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "user")
-public class User {
-
-    String firstName,lastName,email;
-    String password;
-    String role;
+@Table(name = "teacherDetails")
+public class TeacherDetails {
+    @Id
+    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String grad;
+    private String temeInteres;
+    private Long locuri;
+    private Long locuriLibere;
 
     public void setId(Long id) {
         this.id = id;
     }
 
     @Id
-    @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long getId() {
         return id;
     }
