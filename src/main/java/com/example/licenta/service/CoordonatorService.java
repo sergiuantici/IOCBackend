@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -68,5 +69,13 @@ public class CoordonatorService {
         TeacherDetails referenceById =  teacherRepository.getReferenceById(id);
         referenceById.setTemeInteres(themesInteres);
         teacherRepository.save(referenceById);
+    }
+
+    public List<User> getAcceptedStudents(Long teacherId) {
+        List<Coordonare> studentsTeachers = coordonationRepository.findAll();
+        Stream<Long> studentsForTeacherStream = studentsTeachers.stream()
+                .filter((coordonare -> Objects.equals(coordonare.getId().getTeacherId(), teacherId)))
+                .map(coordonare -> coordonare.getId().getStudentId());
+        return userRepository.findAllById(studentsForTeacherStream.collect(Collectors.toList()));
     }
 }

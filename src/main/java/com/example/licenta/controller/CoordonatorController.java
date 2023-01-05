@@ -65,4 +65,9 @@ public class CoordonatorController {
         coordonatorService.updateThemesInteres(id, newThemesInteres);
         return new ResponseEntity<>("bine", HttpStatus.OK);
     }
+
+    @GetMapping("/acceptedStudents/{id}")
+    public ResponseEntity<?> getAcceptedStudents(@PathVariable Long id) {
+        return new ResponseEntity<>(coordonatorService.getAcceptedStudents(id), HttpStatus.OK);
+    }
 }
