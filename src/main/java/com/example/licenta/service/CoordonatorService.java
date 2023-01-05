@@ -58,4 +58,15 @@ public class CoordonatorService {
     public List<TeacherDetails> getTeachers(){
         return teacherRepository.findAll();
     }
+
+    public String getThemesInteres(Long id){
+        TeacherDetails referenceById =  teacherRepository.getReferenceById(id);
+        return referenceById.getTemeInteres();
+    }
+
+    public void updateThemesInteres(Long id, String themesInteres){
+        TeacherDetails referenceById =  teacherRepository.getReferenceById(id);
+        referenceById.setTemeInteres(themesInteres);
+        teacherRepository.save(referenceById);
+    }
 }
