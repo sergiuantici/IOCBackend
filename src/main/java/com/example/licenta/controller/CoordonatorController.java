@@ -2,14 +2,12 @@ package com.example.licenta.controller;
 
 import com.example.licenta.model.Acord;
 import com.example.licenta.model.StudentTeacherId;
-import com.example.licenta.model.User;
 import com.example.licenta.service.CoordonatorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 @RestController
 @RequestMapping("coordonator")
