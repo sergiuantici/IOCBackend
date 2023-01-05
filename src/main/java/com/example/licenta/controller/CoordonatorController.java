@@ -56,4 +56,9 @@ public class CoordonatorController {
     public ResponseEntity<?> getTeachers(){
         return new ResponseEntity<>(coordonatorService.getTeachers(), HttpStatus.OK);
     }
+
+    @GetMapping("/acceptedStudents/{id}")
+    public ResponseEntity<?> getAcceptedStudents(@PathVariable Long id){
+        return new ResponseEntity<>(coordonatorService.getAcceptedStudents(id),HttpStatus.OK);
+    }
 }

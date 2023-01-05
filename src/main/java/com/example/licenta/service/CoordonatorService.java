@@ -8,7 +8,9 @@ import com.example.licenta.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -24,12 +26,13 @@ public class CoordonatorService {
     TeacherRepository teacherRepository;
     @Resource
     UserRepository userRepository;
+
     public void acceptRequest(StudentTeacherId studentTeacherId) {
         if (acordRepository.existsById(studentTeacherId)) {
             coordonationRepository.save(new Coordonare(studentTeacherId));
             acordRepository.delete(new Acord(studentTeacherId));
             TeacherDetails referenceById = teacherRepository.getReferenceById(studentTeacherId.getTeacherId());
-            referenceById.setLocuriLibere(referenceById.getLocuriLibere()-1);
+            referenceById.setLocuriLibere(referenceById.getLocuriLibere() - 1);
             teacherRepository.save(referenceById);
         }
 
@@ -37,7 +40,7 @@ public class CoordonatorService {
 
     public Acord getAcord(StudentTeacherId studentTeacherId) {
         Optional<Acord> byId = acordRepository.findById(studentTeacherId);
-        if(byId.isEmpty())
+        if (byId.isEmpty())
             return null;
         else return byId.get();
     }
@@ -55,7 +58,15 @@ public class CoordonatorService {
         return userRepository.findAllById(longStream.collect(Collectors.toList()));
     }
 
-    public List<TeacherDetails> getTeachers(){
+    public List<TeacherDetails> getTeachers() {
         return teacherRepository.findAll();
+    }
+
+    public List<User> getAcceptedStudents(Long teacherId) {
+        List<Coordonare> studentsTeachers = coordonationRepository.findAll();
+        Stream<Long> studentsForTeacherStream = studentsTeachers.stream()
+                .filter((coordonare -> Objects.equals(coordonare.getId().getTeacherId(), teacherId)))
+                .map(coordonare -> coordonare.getId().getStudentId());
+        return userRepository.findAllById(studentsForTeacherStream.collect(Collectors.toList()));
     }
 }
