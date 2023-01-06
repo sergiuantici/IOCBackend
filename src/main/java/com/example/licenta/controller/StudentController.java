@@ -26,4 +26,9 @@ public class StudentController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         }
     }
+
+    @GetMapping("/{studentId}/request-count")
+    public ResponseEntity<?> getRequestCount(@PathVariable Long studentId){
+            return new ResponseEntity<>(studentService.getRequestCount (studentId), HttpStatus.OK);
+    }
 }
