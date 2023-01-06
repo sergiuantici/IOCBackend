@@ -1,8 +1,10 @@
 package com.example.licenta.service;
 
 import com.example.licenta.exceptions.RequestsLimitReachedException;
+import com.example.licenta.model.Acord;
 import com.example.licenta.model.SoliciareAcord;
 import com.example.licenta.model.StudentTeacherId;
+import com.example.licenta.model.TeacherDetails;
 import com.example.licenta.repository.*;
 import com.example.licenta.requests.SolicitareAcordRequest;
 import org.springframework.stereotype.Service;
@@ -48,5 +50,14 @@ public class StudentService {
 
     public Long getRequestCount(Long studentId) {
         return getNumberOfSentRequests(studentId);
+    }
+
+    public Boolean isCoordinated(Long studentId) {
+        return coordonationRepository.existsByStudentId(studentId);
+    }
+
+    public TeacherDetails getCoordinatorForStudent(Long studentId){
+        Long teacherId = coordonationRepository.findTeacherIdByStudentId(studentId);
+        return teacherRepository.findByUserId(teacherId);
     }
 }

@@ -29,6 +29,16 @@ public class StudentController {
 
     @GetMapping("/{studentId}/request-count")
     public ResponseEntity<?> getRequestCount(@PathVariable Long studentId){
-            return new ResponseEntity<>(studentService.getRequestCount (studentId), HttpStatus.OK);
+            return new ResponseEntity<>(studentService.getRequestCount(studentId), HttpStatus.OK);
+    }
+
+    @GetMapping("/{studentId}/is-coordinated")
+    public ResponseEntity<?> isCoordinated(@PathVariable Long studentId){
+        return new ResponseEntity<>(studentService.isCoordinated(studentId), HttpStatus.OK);
+    }
+
+    @GetMapping("/{studentId}/coordinator")
+    public ResponseEntity<?> getCoordinator(@PathVariable Long studentId){
+        return new ResponseEntity<>(studentService.getCoordinatorForStudent(studentId), HttpStatus.OK);
     }
 }
