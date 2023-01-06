@@ -24,14 +24,18 @@ public class StudentService {
     @Resource
     SolicitareAcordRepository solicitareAcordRepository;
 
-    public void sendRequest(SolicitareAcordRequest solicitareAcordRequest) throws RequestsLimitReachedException {
-        Long countOfRequestsMade = solicitareAcordRepository
+    private Long getNumberOfSentRequests(Long studentId){
+        return solicitareAcordRepository
                 .findAll()
                 .stream()
                 .filter(x -> x.getTime().isAfter(LocalDateTime.now().minusWeeks(1))
                         &&
-                        x.getId().getStudentId() == solicitareAcordRequest.getStudentId())
+                        x.getId().getStudentId() == studentId)
                 .count();
+    }
+
+    public void sendRequest(SolicitareAcordRequest solicitareAcordRequest) throws RequestsLimitReachedException {
+        Long countOfRequestsMade = getNumberOfSentRequests(solicitareAcordRequest.getStudentId());
 
         if(countOfRequestsMade >= 3) {
             throw new RequestsLimitReachedException("This student has already made 3 requests this week.");
@@ -40,5 +44,9 @@ public class StudentService {
         StudentTeacherId studentTeacherId = new StudentTeacherId(solicitareAcordRequest.getStudentId(), solicitareAcordRequest.getTeacherId());
         String fileURL = solicitareAcordRequest.getFileURL();
         solicitareAcordRepository.save(new SoliciareAcord(studentTeacherId, fileURL, LocalDateTime.now()));
+    }
+
+    public Long getRequestCount(Long studentId) {
+        return getNumberOfSentRequests(studentId);
     }
 }
