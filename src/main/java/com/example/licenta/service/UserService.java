@@ -11,12 +11,15 @@ public class UserService{
     @Resource
     private UserRepository userRepository;
 
-    public User save(User event) {
-        return userRepository.save(event);
+    public User save(User user) {
+        return userRepository.save(user);
     }
 
     public List<User> findAll() {
         return userRepository.findAll();
     }
 
+    public User findById(Long id){
+        return userRepository.findById(id).get();
+    }
 }
