@@ -60,7 +60,7 @@ public class CoordonatorController {
         return new ResponseEntity<>(coordonatorService.getThemesInteres(id), HttpStatus.OK);
     }
 
-    @PatchMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<?> updateThemesInteres(@PathVariable Long id, @RequestBody String newThemesInteres){
         coordonatorService.updateThemesInteres(id, newThemesInteres);
         return new ResponseEntity<>("bine", HttpStatus.OK);
