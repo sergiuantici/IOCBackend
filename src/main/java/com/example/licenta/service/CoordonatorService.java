@@ -1,10 +1,7 @@
 package com.example.licenta.service;
 
 import com.example.licenta.model.*;
-import com.example.licenta.repository.AcordRepository;
-import com.example.licenta.repository.CoordonationRepository;
-import com.example.licenta.repository.TeacherRepository;
-import com.example.licenta.repository.UserRepository;
+import com.example.licenta.repository.*;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -25,6 +22,9 @@ public class CoordonatorService {
     TeacherRepository teacherRepository;
     @Resource
     UserRepository userRepository;
+    @Resource
+    PracticeDocumentRepository practiceDocumentRepository;
+
     public void acceptRequest(StudentTeacherId studentTeacherId) {
         if (acordRepository.existsById(studentTeacherId)) {
             coordonationRepository.save(new Coordonare(studentTeacherId));
@@ -77,5 +77,9 @@ public class CoordonatorService {
                 .filter((coordonare -> Objects.equals(coordonare.getId().getTeacherId(), teacherId)))
                 .map(coordonare -> coordonare.getId().getStudentId());
         return userRepository.findAllById(studentsForTeacherStream.collect(Collectors.toList()));
+    }
+
+    public PracticeDocument savePracticeDocument(PracticeDocument practiceDocument){
+        return practiceDocumentRepository.save(practiceDocument);
     }
 }
