@@ -19,7 +19,7 @@ public class UserController {
         return new ResponseEntity<>(userService.save(user), HttpStatus.OK);
     }
 
-    @GetMapping("/user/{user}&{password}")
+    @GetMapping("/{user}/{password}")
     public ResponseEntity<?> findUser(@PathVariable String user,@PathVariable String password){
         return new ResponseEntity<>(userService.findUser(user,password),HttpStatus.OK);
 
