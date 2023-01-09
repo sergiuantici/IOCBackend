@@ -1,18 +1,20 @@
 package com.example.licenta.controller;
 
+import com.example.licenta.exceptions.GeneralAdminException;
 import com.example.licenta.model.User;
+import com.example.licenta.model.dto.StudentStatusDto;
 import com.example.licenta.service.AdminService;
 import com.example.licenta.service.UserService;
 import com.example.licenta.utils.ExcelHelper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+
+import static org.springframework.http.ResponseEntity.notFound;
+import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
 @RequestMapping("/admins")
@@ -45,5 +47,18 @@ public class AdminController {
             }
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Excel file required.");
+    }
+
+    @GetMapping("/students/{studentId}")
+    public ResponseEntity<?> getStudentStatus(@PathVariable Long studentId) {
+        if (studentId <= 0) {
+            notFound();
+        }
+
+        try {
+            return ok(adminService.getStudentStatus(studentId));
+        } catch (GeneralAdminException e) {
+            return new ResponseEntity<>(e.getMessage(), e.getStatus());
+        }
     }
 }
