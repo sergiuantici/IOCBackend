@@ -3,6 +3,7 @@ package com.example.licenta.controller;
 import com.example.licenta.model.Acord;
 import com.example.licenta.model.PracticeDocument;
 import com.example.licenta.model.StudentTeacherId;
+import com.example.licenta.model.Task;
 import com.example.licenta.model.dto.PracticeDocumentDTO;
 import com.example.licenta.service.CoordonatorService;
 import com.example.licenta.service.UserService;
@@ -89,5 +90,10 @@ public class CoordonatorController {
             response.add(coordonatorService.savePracticeDocument(practiceDocument));
         }
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/assignment")
+    public ResponseEntity<?> saveAssignment(@RequestBody Task task) throws MalformedURLException {
+        return ResponseEntity.ok(coordonatorService.saveAssignment(task));
     }
 }
