@@ -24,6 +24,11 @@ public class CoordonatorService {
     UserRepository userRepository;
     @Resource
     PracticeDocumentRepository practiceDocumentRepository;
+    private final TaskRepository taskRepository;
+
+    public CoordonatorService(TaskRepository taskRepository) {
+        this.taskRepository = taskRepository;
+    }
 
     public void acceptRequest(StudentTeacherId studentTeacherId) {
         if (acordRepository.existsById(studentTeacherId)) {
@@ -81,5 +86,9 @@ public class CoordonatorService {
 
     public PracticeDocument savePracticeDocument(PracticeDocument practiceDocument){
         return practiceDocumentRepository.save(practiceDocument);
+    }
+
+    public Task saveAssignment(Task task){
+        return taskRepository.save(task);
     }
 }
