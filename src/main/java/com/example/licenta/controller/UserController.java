@@ -10,6 +10,7 @@ import javax.annotation.Resource;
 
 @RestController
 @RequestMapping("users")
+@CrossOrigin(origins = "*")
 public class UserController {
     @Resource
     private UserService userService;
@@ -21,7 +22,11 @@ public class UserController {
 
     @GetMapping("/{user}/{password}")
     public ResponseEntity<?> findUser(@PathVariable String user,@PathVariable String password){
-        return new ResponseEntity<>(userService.findUser(user,password),HttpStatus.OK);
+        User user1 = userService.findUser(user, password);
+        if(user1!=null) {
+            return new ResponseEntity<>(user1,HttpStatus.OK);
+        }
+        else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
     }
 
