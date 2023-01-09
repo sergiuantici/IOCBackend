@@ -12,4 +12,6 @@ public interface CoordonationRepository extends JpaRepository<Coordonare, Studen
 
     @Query("select c.id.teacherId from Coordonare c where c.id.studentId = :studentId")
     Long findTeacherIdByStudentId(@Param("studentId") Long studentId);
+
+    Coordonare findFirstById_StudentId(Long studentId);
 }
