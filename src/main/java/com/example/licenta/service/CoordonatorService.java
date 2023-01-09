@@ -61,12 +61,12 @@ public class CoordonatorService {
     }
 
     public String getThemesInteres(Long id){
-        TeacherDetails referenceById =  teacherRepository.getReferenceById(id);
+        TeacherDetails referenceById =  teacherRepository.findByUserId(id);
         return referenceById.getTemeInteres();
     }
 
     public void updateThemesInteres(Long id, String themesInteres){
-        TeacherDetails referenceById =  teacherRepository.getReferenceById(id);
+        TeacherDetails referenceById =  teacherRepository.findByUserId(id);
         referenceById.setTemeInteres(themesInteres);
         teacherRepository.save(referenceById);
     }
