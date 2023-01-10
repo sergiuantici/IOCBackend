@@ -24,6 +24,9 @@ public class CoordonatorService {
     UserRepository userRepository;
     @Resource
     PracticeDocumentRepository practiceDocumentRepository;
+    @Resource
+    AnnouncementRepository announcementRepository;
+
     private final TaskRepository taskRepository;
 
     public CoordonatorService(TaskRepository taskRepository) {
@@ -35,7 +38,7 @@ public class CoordonatorService {
             coordonationRepository.save(new Coordonare(studentTeacherId));
             acordRepository.delete(new Acord(studentTeacherId));
             TeacherDetails referenceById = teacherRepository.getReferenceById(studentTeacherId.getTeacherId());
-            referenceById.setLocuriLibere(referenceById.getLocuriLibere()-1);
+            referenceById.setLocuriLibere(referenceById.getLocuriLibere() - 1);
             teacherRepository.save(referenceById);
         }
 
@@ -43,9 +46,10 @@ public class CoordonatorService {
 
     public Acord getAcord(StudentTeacherId studentTeacherId) {
         Optional<Acord> byId = acordRepository.findById(studentTeacherId);
-        if(byId.isEmpty())
+        if (byId.isEmpty())
             return null;
-        else return byId.get();
+        else
+            return byId.get();
     }
 
     public List<Acord> findAllAcords(Long teacherId) {
@@ -57,21 +61,22 @@ public class CoordonatorService {
     }
 
     public List<User> getStudents(Long teacherId) {
-        Stream<Long> longStream = acordRepository.findAllByTeacherId(teacherId).stream().map(e -> e.getId().getStudentId());
+        Stream<Long> longStream = acordRepository.findAllByTeacherId(teacherId).stream()
+                .map(e -> e.getId().getStudentId());
         return userRepository.findAllById(longStream.collect(Collectors.toList()));
     }
 
-    public List<TeacherDetails> getTeachers(){
+    public List<TeacherDetails> getTeachers() {
         return teacherRepository.findAll();
     }
 
-    public String getThemesInteres(Long id){
-        TeacherDetails referenceById =  teacherRepository.findByUserId(id);
+    public String getThemesInteres(Long id) {
+        TeacherDetails referenceById = teacherRepository.findByUserId(id);
         return referenceById.getTemeInteres();
     }
 
-    public void updateThemesInteres(Long id, String themesInteres){
-        TeacherDetails referenceById =  teacherRepository.findByUserId(id);
+    public void updateThemesInteres(Long id, String themesInteres) {
+        TeacherDetails referenceById = teacherRepository.findByUserId(id);
         referenceById.setTemeInteres(themesInteres);
         teacherRepository.save(referenceById);
     }
@@ -84,11 +89,15 @@ public class CoordonatorService {
         return userRepository.findAllById(studentsForTeacherStream.collect(Collectors.toList()));
     }
 
-    public PracticeDocument savePracticeDocument(PracticeDocument practiceDocument){
+    public PracticeDocument savePracticeDocument(PracticeDocument practiceDocument) {
         return practiceDocumentRepository.save(practiceDocument);
     }
 
-    public Task saveAssignment(Task task){
+    public Task saveAssignment(Task task) {
         return taskRepository.save(task);
+    }
+
+    public List<Announcement> getAnnouncements() {
+        return announcementRepository.findAll();
     }
 }

@@ -1,6 +1,7 @@
 package com.example.licenta.controller;
 
 import com.example.licenta.exceptions.GeneralAdminException;
+import com.example.licenta.model.Announcement;
 import com.example.licenta.model.User;
 import com.example.licenta.model.dto.StudentStatusDto;
 import com.example.licenta.service.AdminService;
@@ -18,6 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.net.MalformedURLException;
+
 import java.util.Date;
 import java.util.List;
 
@@ -47,7 +50,8 @@ public class AdminController {
                     userService.save(u);
                 }
 
-                message = "Uploaded the file successfully: " + file.getOriginalFilename() + ". Processed " + users.size() + " entries.";
+                message = "Uploaded the file successfully: " + file.getOriginalFilename() + ". Processed "
+                        + users.size() + " entries.";
                 return ResponseEntity.status(HttpStatus.OK).body(message);
             } catch (Exception e) {
                 message = "Could not upload the file: " + file.getOriginalFilename() + "!";
@@ -70,9 +74,9 @@ public class AdminController {
         }
     }
 
-
     @GetMapping("/students/all")
-    public ResponseEntity<?> getDetailedReportForAllStudents(@RequestParam(value = "type", defaultValue = "json") String type) throws GeneralAdminException {
+    public ResponseEntity<?> getDetailedReportForAllStudents(
+            @RequestParam(value = "type", defaultValue = "json") String type) throws GeneralAdminException {
         var response = adminService.getDetailedReportForAllStudents();
         if ("json".equalsIgnoreCase(type)) {
             return ok(response);
@@ -98,4 +102,11 @@ public class AdminController {
             return new ResponseEntity<>(outputStream.toByteArray(), headers, HttpStatus.OK);
         }
     }
+
+    @PostMapping("/save-announcement")
+    public ResponseEntity<?> saveEntity(@RequestBody Announcement announcement) {
+        adminService.saveAnnouncement(announcement);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
 }

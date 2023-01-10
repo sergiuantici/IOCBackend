@@ -17,6 +17,8 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.springframework.http.ResponseEntity.ok;
+
 @RestController
 @RequestMapping("coordonator")
 @CrossOrigin(origins = "*")
@@ -49,12 +51,12 @@ public class CoordonatorController {
         return new ResponseEntity<>(coordonatorService.getStudents(teacherId), HttpStatus.OK);
     }
 
-//    @GetMapping("/acord")
-//    public ResponseEntity<?> findAllAcords() {
-//        List<User> users=coordonatorService.getStudents();
-//        return new ResponseEntity<>(coordonatorService.findAllAcords(teacherId), HttpStatus.OK);
-//    }
-
+    // @GetMapping("/acord")
+    // public ResponseEntity<?> findAllAcords() {
+    // List<User> users=coordonatorService.getStudents();
+    // return new ResponseEntity<>(coordonatorService.findAllAcords(teacherId),
+    // HttpStatus.OK);
+    // }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getLocuriLibere(@PathVariable Long id) {
@@ -72,7 +74,7 @@ public class CoordonatorController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateThemesInteres(@PathVariable Long id, @RequestBody String newThemesInteres){
+    public ResponseEntity<?> updateThemesInteres(@PathVariable Long id, @RequestBody String newThemesInteres) {
         coordonatorService.updateThemesInteres(id, newThemesInteres);
         return new ResponseEntity<>("bine", HttpStatus.OK);
     }
@@ -83,10 +85,12 @@ public class CoordonatorController {
     }
 
     @PostMapping("/practiceDocument")
-    public ResponseEntity<?> savePracticeDocument(@RequestBody PracticeDocumentDTO practiceDocumentDTO) throws MalformedURLException {
+    public ResponseEntity<?> savePracticeDocument(@RequestBody PracticeDocumentDTO practiceDocumentDTO)
+            throws MalformedURLException {
         List<PracticeDocument> response = new ArrayList<>();
         for (File document : practiceDocumentDTO.getFileList()) {
-            PracticeDocument practiceDocument = new PracticeDocument(123L, userService.findById(practiceDocumentDTO.getUserId()), document.toURI().toURL().toString());
+            PracticeDocument practiceDocument = new PracticeDocument(123L,
+                    userService.findById(practiceDocumentDTO.getUserId()), document.toURI().toURL().toString());
             response.add(coordonatorService.savePracticeDocument(practiceDocument));
         }
         return ResponseEntity.ok(response);
@@ -95,5 +99,10 @@ public class CoordonatorController {
     @PostMapping("/assignment")
     public ResponseEntity<?> saveAssignment(@RequestBody Task task) throws MalformedURLException {
         return ResponseEntity.ok(coordonatorService.saveAssignment(task));
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getAnnouncement() {
+        return new ResponseEntity<>(coordonatorService.getAnnouncements(), HttpStatus.OK);
     }
 }
