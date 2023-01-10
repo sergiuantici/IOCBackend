@@ -3,10 +3,9 @@ package com.example.licenta.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -16,18 +15,25 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "task")
 public class Task {
-    @EmbeddedId
-    StudentTeacherId id;
+    @Id
+    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;//aici am schimbat pentru ca daca lasam id-ul de jos atunci se putea dadea un singur task de la un coordonator pt un student (banuiesc ca
+    // un student va avea mai multe taskuri)
+    StudentTeacherId studentTeacherid;
 
     String message;
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm")
     LocalDateTime deadline;
 
-    String documentUrl;
+    @ElementCollection
+    @CollectionTable(name = "task_turn_ins",joinColumns = @JoinColumn(name = "id"))
+    @Column(name = "document_list")
+    List<String> documentUrls;
 
     Double grade;
 
     public Task(StudentTeacherId id) {
-        this.id = id;
+        this.studentTeacherid = id;
     }
 }

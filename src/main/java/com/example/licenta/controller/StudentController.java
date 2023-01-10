@@ -1,6 +1,8 @@
 package com.example.licenta.controller;
 
 import com.example.licenta.exceptions.RequestsLimitReachedException;
+import com.example.licenta.exceptions.StudentNotFoundException;
+import com.example.licenta.model.dto.TaskDocumentDto;
 import com.example.licenta.requests.SolicitareAcordRequest;
 import com.example.licenta.service.StudentService;
 import org.springframework.http.HttpStatus;
@@ -44,5 +46,25 @@ public class StudentController {
     @GetMapping
     public ResponseEntity<?> getAnnouncement() {
         return new ResponseEntity<>(studentService.getAnnouncements(), HttpStatus.OK);
+    }
+
+    @GetMapping("/{studentId}/stage-details")
+    public ResponseEntity<?> getLatestStageDetails(@PathVariable Long studentId){
+        try{
+            return new ResponseEntity<>(studentService.getLatestDetails(studentId),HttpStatus.OK);
+        }catch (StudentNotFoundException ex){
+            return new ResponseEntity<>(ex.getMessage(),HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/task/{taskId}")
+    public ResponseEntity<?> turnInTask(@RequestBody TaskDocumentDto taskDocumentDto, @PathVariable Long taskId){
+        studentService.turnInTask(taskId,taskDocumentDto.getDocumentUrl());
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/{studentId}/criteria")
+    public ResponseEntity<?> getEvaluationCriteria(@PathVariable Long studentId){
+        return new ResponseEntity<>(studentService.getEvaluation(studentId),HttpStatus.OK);
     }
 }

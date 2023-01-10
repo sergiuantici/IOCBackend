@@ -2,15 +2,12 @@ package com.example.licenta.service;
 
 import com.example.licenta.exceptions.GeneralAdminException;
 import com.example.licenta.model.Announcement;
+import com.example.licenta.model.GlobalDetails;
 import com.example.licenta.model.User;
 import com.example.licenta.model.dto.DetailedStudentReportDto;
 import com.example.licenta.model.dto.StudentStatusDto;
-import com.example.licenta.repository.AnnouncementRepository;
-import com.example.licenta.repository.CoordonationRepository;
-import com.example.licenta.repository.SolicitareAcordRepository;
-import com.example.licenta.repository.UserRepository;
+import com.example.licenta.repository.*;
 import com.example.licenta.utils.ExcelHelper;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -18,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -28,13 +24,15 @@ public class AdminService {
     private final SolicitareAcordRepository solicitareAcordRepository;
     private final CoordonationRepository coordonationRepository;
     private final AnnouncementRepository announcementRepository;
+    private final GlobalDetailsRepository globalDetailsRepository;
 
     public AdminService(UserRepository userRepository, SolicitareAcordRepository solicitareAcordRepository,
-            CoordonationRepository coordonationRepository, AnnouncementRepository announcementRepository) {
+            CoordonationRepository coordonationRepository, AnnouncementRepository announcementRepository,GlobalDetailsRepository globalDetailsRepository) {
         this.userRepository = userRepository;
         this.solicitareAcordRepository = solicitareAcordRepository;
         this.coordonationRepository = coordonationRepository;
         this.announcementRepository = announcementRepository;
+        this.globalDetailsRepository = globalDetailsRepository;
     }
 
     public List<User> processExcel(MultipartFile file) throws IOException {
@@ -75,5 +73,9 @@ public class AdminService {
 
     public void saveAnnouncement(Announcement announcement) {
         announcementRepository.save(announcement);
+    }
+
+    public void saveGlobalDetails(GlobalDetails globalDetails){
+        globalDetailsRepository.save(globalDetails);
     }
 }

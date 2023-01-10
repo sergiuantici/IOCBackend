@@ -1,19 +1,18 @@
 package com.example.licenta.service;
 
-import java.util.List;
-
 import com.example.licenta.exceptions.RequestsLimitReachedException;
-import com.example.licenta.model.Acord;
-import com.example.licenta.model.SoliciareAcord;
-import com.example.licenta.model.StudentTeacherId;
-import com.example.licenta.model.TeacherDetails;
-import com.example.licenta.model.Announcement;
+import com.example.licenta.exceptions.StudentNotFoundException;
+import com.example.licenta.model.*;
+import com.example.licenta.model.dto.EvaluationDto;
+import com.example.licenta.model.dto.PracticeDetailsDto;
 import com.example.licenta.repository.*;
 import com.example.licenta.requests.SolicitareAcordRequest;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StudentService {
@@ -27,9 +26,14 @@ public class StudentService {
     UserRepository userRepository;
     @Resource
     AnnouncementRepository announcementRepository;
-
+    @Resource
+    GlobalDetailsRepository globalDetailsRepository;
     @Resource
     SolicitareAcordRepository solicitareAcordRepository;
+    @Resource
+    StudentRepository studentRepository;
+    @Resource
+    TaskRepository taskRepository;
 
     private Long getNumberOfSentRequests(Long studentId) {
         return solicitareAcordRepository
@@ -70,4 +74,40 @@ public class StudentService {
     public List<Announcement> getAnnouncements() {
         return announcementRepository.findAll();
     }
+
+    public PracticeDetailsDto getLatestDetails(Long studentId) throws StudentNotFoundException {
+        PracticeDetailsDto practiceDetailsDto = new PracticeDetailsDto();
+        GlobalDetails globalDetails = globalDetailsRepository.findFirstByOrderByIdDesc();
+        practiceDetailsDto.setGlobalDetails(globalDetails);
+
+        StudentDetails studentDetails = studentRepository.findByUserId(studentId);
+
+        practiceDetailsDto.setExecutedHours(studentDetails.getExecutedHours());
+        practiceDetailsDto.setRemainingHours(globalDetails.getPracticeHoursTotal()-studentDetails.getExecutedHours());
+
+        TeacherDetails teacherDetails = getCoordinatorForStudent(studentId);
+        practiceDetailsDto.setCoordonator(teacherDetails.getUser().getFirstName()+" "+teacherDetails.getUser().getLastName());
+        practiceDetailsDto.setTasks(taskRepository.findAllByStudentTeacherid(new StudentTeacherId(studentId,teacherDetails.getId())));
+
+        return practiceDetailsDto;
+    }
+
+    public void turnInTask(Long taskId,String documentUrl){
+        Task task = taskRepository.findById(taskId).get();
+        task.getDocumentUrls().add(documentUrl);
+        taskRepository.save(task);
+    }
+
+    public EvaluationDto getEvaluation(Long studentId){
+        EvaluationDto evaluationDto = new EvaluationDto();
+        StudentDetails studentDetails = studentRepository.findByUserId(studentId);
+        evaluationDto.setNormalGrade(studentDetails.getNormalGrade());
+        evaluationDto.setReTakeGrade(studentDetails.getReTakeGrade());
+
+        TeacherDetails teacherDetails = getCoordinatorForStudent(studentId);
+        evaluationDto.setEvaluationCriteria(teacherDetails.getPracticeCriteria());
+        return evaluationDto;
+    }
+
+
 }
