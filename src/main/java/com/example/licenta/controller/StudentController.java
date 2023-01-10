@@ -17,28 +17,32 @@ public class StudentController {
     private StudentService studentService;
 
     @PostMapping("/request")
-    public ResponseEntity<?> sendRequest(@RequestBody SolicitareAcordRequest solicitareAcordRequest){
+    public ResponseEntity<?> sendRequest(@RequestBody SolicitareAcordRequest solicitareAcordRequest) {
         try {
             studentService.sendRequest(solicitareAcordRequest);
             return new ResponseEntity<>(true, HttpStatus.OK);
-        }
-        catch (RequestsLimitReachedException e){
+        } catch (RequestsLimitReachedException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         }
     }
 
     @GetMapping("/{studentId}/request-count")
-    public ResponseEntity<?> getRequestCount(@PathVariable Long studentId){
-            return new ResponseEntity<>(studentService.getRequestCount(studentId), HttpStatus.OK);
+    public ResponseEntity<?> getRequestCount(@PathVariable Long studentId) {
+        return new ResponseEntity<>(studentService.getRequestCount(studentId), HttpStatus.OK);
     }
 
     @GetMapping("/{studentId}/is-coordinated")
-    public ResponseEntity<?> isCoordinated(@PathVariable Long studentId){
+    public ResponseEntity<?> isCoordinated(@PathVariable Long studentId) {
         return new ResponseEntity<>(studentService.isCoordinated(studentId), HttpStatus.OK);
     }
 
     @GetMapping("/{studentId}/coordinator")
-    public ResponseEntity<?> getCoordinator(@PathVariable Long studentId){
+    public ResponseEntity<?> getCoordinator(@PathVariable Long studentId) {
         return new ResponseEntity<>(studentService.getCoordinatorForStudent(studentId), HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getAnnouncement() {
+        return new ResponseEntity<>(studentService.getAnnouncements(), HttpStatus.OK);
     }
 }

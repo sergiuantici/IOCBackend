@@ -1,9 +1,11 @@
 package com.example.licenta.service;
 
 import com.example.licenta.exceptions.GeneralAdminException;
+import com.example.licenta.model.Announcement;
 import com.example.licenta.model.User;
 import com.example.licenta.model.dto.DetailedStudentReportDto;
 import com.example.licenta.model.dto.StudentStatusDto;
+import com.example.licenta.repository.AnnouncementRepository;
 import com.example.licenta.repository.CoordonationRepository;
 import com.example.licenta.repository.SolicitareAcordRepository;
 import com.example.licenta.repository.UserRepository;
@@ -25,11 +27,14 @@ public class AdminService {
     private final UserRepository userRepository;
     private final SolicitareAcordRepository solicitareAcordRepository;
     private final CoordonationRepository coordonationRepository;
+    private final AnnouncementRepository announcementRepository;
 
-    public AdminService(UserRepository userRepository, SolicitareAcordRepository solicitareAcordRepository, CoordonationRepository coordonationRepository) {
+    public AdminService(UserRepository userRepository, SolicitareAcordRepository solicitareAcordRepository,
+            CoordonationRepository coordonationRepository, AnnouncementRepository announcementRepository) {
         this.userRepository = userRepository;
         this.solicitareAcordRepository = solicitareAcordRepository;
         this.coordonationRepository = coordonationRepository;
+        this.announcementRepository = announcementRepository;
     }
 
     public List<User> processExcel(MultipartFile file) throws IOException {
@@ -37,7 +42,8 @@ public class AdminService {
     }
 
     public StudentStatusDto getStudentStatus(Long studentId) throws GeneralAdminException {
-        var student = userRepository.findById(studentId).orElseThrow(() -> new GeneralAdminException("Student not found", HttpStatus.NOT_FOUND));
+        var student = userRepository.findById(studentId)
+                .orElseThrow(() -> new GeneralAdminException("Student not found", HttpStatus.NOT_FOUND));
 
         return getStudentStatusDto(student);
     }
@@ -57,7 +63,6 @@ public class AdminService {
 
     public DetailedStudentReportDto getDetailedReportForAllStudents() {
 
-
         List<StudentStatusDto> studentStatuses = userRepository.findAll()
                 .stream()
                 .filter(user -> "student".equalsIgnoreCase(user.getRole())
@@ -66,5 +71,9 @@ public class AdminService {
                 .toList();
 
         return new DetailedStudentReportDto(studentStatuses);
+    }
+
+    public void saveAnnouncement(Announcement announcement) {
+        announcementRepository.save(announcement);
     }
 }

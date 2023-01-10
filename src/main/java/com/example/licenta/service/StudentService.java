@@ -1,10 +1,13 @@
 package com.example.licenta.service;
 
+import java.util.List;
+
 import com.example.licenta.exceptions.RequestsLimitReachedException;
 import com.example.licenta.model.Acord;
 import com.example.licenta.model.SoliciareAcord;
 import com.example.licenta.model.StudentTeacherId;
 import com.example.licenta.model.TeacherDetails;
+import com.example.licenta.model.Announcement;
 import com.example.licenta.repository.*;
 import com.example.licenta.requests.SolicitareAcordRequest;
 import org.springframework.stereotype.Service;
@@ -22,11 +25,13 @@ public class StudentService {
     TeacherRepository teacherRepository;
     @Resource
     UserRepository userRepository;
+    @Resource
+    AnnouncementRepository announcementRepository;
 
     @Resource
     SolicitareAcordRepository solicitareAcordRepository;
 
-    private Long getNumberOfSentRequests(Long studentId){
+    private Long getNumberOfSentRequests(Long studentId) {
         return solicitareAcordRepository
                 .findAll()
                 .stream()
@@ -39,11 +44,12 @@ public class StudentService {
     public void sendRequest(SolicitareAcordRequest solicitareAcordRequest) throws RequestsLimitReachedException {
         Long countOfRequestsMade = getNumberOfSentRequests(solicitareAcordRequest.getStudentId());
 
-        if(countOfRequestsMade >= 3) {
+        if (countOfRequestsMade >= 3) {
             throw new RequestsLimitReachedException("This student has already made 3 requests this week.");
         }
 
-        StudentTeacherId studentTeacherId = new StudentTeacherId(solicitareAcordRequest.getStudentId(), solicitareAcordRequest.getTeacherId());
+        StudentTeacherId studentTeacherId = new StudentTeacherId(solicitareAcordRequest.getStudentId(),
+                solicitareAcordRequest.getTeacherId());
         String fileURL = solicitareAcordRequest.getFileURL();
         solicitareAcordRepository.save(new SoliciareAcord(studentTeacherId, fileURL, LocalDateTime.now()));
     }
@@ -56,8 +62,12 @@ public class StudentService {
         return coordonationRepository.existsByStudentId(studentId);
     }
 
-    public TeacherDetails getCoordinatorForStudent(Long studentId){
+    public TeacherDetails getCoordinatorForStudent(Long studentId) {
         Long teacherId = coordonationRepository.findTeacherIdByStudentId(studentId);
         return teacherRepository.findByUserId(teacherId);
+    }
+
+    public List<Announcement> getAnnouncements() {
+        return announcementRepository.findAll();
     }
 }
