@@ -2,25 +2,22 @@ package com.example.licenta.controller;
 
 import com.example.licenta.exceptions.GeneralAdminException;
 import com.example.licenta.model.Announcement;
+import com.example.licenta.model.GlobalDetails;
 import com.example.licenta.model.User;
-import com.example.licenta.model.dto.StudentStatusDto;
 import com.example.licenta.service.AdminService;
 import com.example.licenta.service.UserService;
 import com.example.licenta.utils.ExcelGenerator;
 import com.example.licenta.utils.ExcelHelper;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.net.MalformedURLException;
-
 import java.util.Date;
 import java.util.List;
 
@@ -109,4 +106,9 @@ public class AdminController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    @PostMapping("/details")
+    public ResponseEntity<?> saveGlobalDetails(@RequestBody GlobalDetails globalDetails){
+        adminService.saveGlobalDetails(globalDetails);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
 }

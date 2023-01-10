@@ -101,7 +101,7 @@ public class CoordonatorController {
         return ResponseEntity.ok(coordonatorService.saveAssignment(task));
     }
 
-    @GetMapping
+    @GetMapping("/announcement")
     public ResponseEntity<?> getAnnouncement() {
         return new ResponseEntity<>(coordonatorService.getAnnouncements(), HttpStatus.OK);
     }

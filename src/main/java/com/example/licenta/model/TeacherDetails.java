@@ -21,6 +21,7 @@ public class TeacherDetails {
     private String temeInteres;
     private Long locuri;
     private Long locuriLibere;
+    private String practiceCriteria;
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
