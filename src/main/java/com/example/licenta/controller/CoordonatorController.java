@@ -63,7 +63,7 @@ public class CoordonatorController {
         return new ResponseEntity<>(coordonatorService.getLocuriLibere(id), HttpStatus.OK);
     }
 
-    @GetMapping("/announcements")
+    @GetMapping
     public ResponseEntity<?> getTeachers() {
         return new ResponseEntity<>(coordonatorService.getTeachers(), HttpStatus.OK);
     }
