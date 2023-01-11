@@ -1,9 +1,9 @@
 package com.example.licenta.service;
 
 import com.example.licenta.exceptions.GeneralAdminException;
-import com.example.licenta.model.Announcement;
-import com.example.licenta.model.GlobalDetails;
-import com.example.licenta.model.User;
+import com.example.licenta.model.*;
+import com.example.licenta.model.dto.AdminAnnouncementRequestDto;
+import com.example.licenta.model.dto.AdminAnnouncementResponseDto;
 import com.example.licenta.model.dto.DetailedStudentReportDto;
 import com.example.licenta.model.dto.StudentStatusDto;
 import com.example.licenta.repository.*;
@@ -25,14 +25,16 @@ public class AdminService {
     private final CoordonationRepository coordonationRepository;
     private final AnnouncementRepository announcementRepository;
     private final GlobalDetailsRepository globalDetailsRepository;
+    private final AdminAnnouncementRepository adminAnnouncementRepository;
 
     public AdminService(UserRepository userRepository, SolicitareAcordRepository solicitareAcordRepository,
-            CoordonationRepository coordonationRepository, AnnouncementRepository announcementRepository,GlobalDetailsRepository globalDetailsRepository) {
+                        CoordonationRepository coordonationRepository, AnnouncementRepository announcementRepository, GlobalDetailsRepository globalDetailsRepository, AdminAnnouncementRepository adminAnnouncementRepository) {
         this.userRepository = userRepository;
         this.solicitareAcordRepository = solicitareAcordRepository;
         this.coordonationRepository = coordonationRepository;
         this.announcementRepository = announcementRepository;
         this.globalDetailsRepository = globalDetailsRepository;
+        this.adminAnnouncementRepository = adminAnnouncementRepository;
     }
 
     public List<User> processExcel(MultipartFile file) throws IOException {
@@ -75,7 +77,31 @@ public class AdminService {
         announcementRepository.save(announcement);
     }
 
-    public void saveGlobalDetails(GlobalDetails globalDetails){
+    public void saveGlobalDetails(GlobalDetails globalDetails) {
         globalDetailsRepository.save(globalDetails);
     }
+
+    public List<AdminAnnouncementResponseDto> getAnnouncementsByType(AdminAnnouncementType type) {
+        if (type == AdminAnnouncementType.ALL) {
+            return adminAnnouncementRepository.findAll()
+                    .stream()
+                    .map(adminAnnouncement ->
+                            new AdminAnnouncementResponseDto(adminAnnouncement.getMessage(), adminAnnouncement.getCreated()))
+                    .toList();
+        } else {
+            return adminAnnouncementRepository.findAllByType(type)
+                    .stream()
+                    .map(adminAnnouncement ->
+                            new AdminAnnouncementResponseDto(adminAnnouncement.getMessage(), adminAnnouncement.getCreated()))
+                    .toList();
+        }
+    }
+
+    public AdminAnnouncementResponseDto addAnnouncement(AdminAnnouncementType type, AdminAnnouncementRequestDto requestDto) {
+        var entity = new AdminAnnouncement(requestDto.message(), type);
+
+        var result = adminAnnouncementRepository.save(entity);
+        return new AdminAnnouncementResponseDto(result.getMessage(), result.getCreated());
+    }
+
 }

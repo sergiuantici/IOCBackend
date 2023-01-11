@@ -1,9 +1,11 @@
 package com.example.licenta.controller;
 
 import com.example.licenta.exceptions.GeneralAdminException;
+import com.example.licenta.model.AdminAnnouncementType;
 import com.example.licenta.model.Announcement;
 import com.example.licenta.model.GlobalDetails;
 import com.example.licenta.model.User;
+import com.example.licenta.model.dto.AdminAnnouncementRequestDto;
 import com.example.licenta.service.AdminService;
 import com.example.licenta.service.UserService;
 import com.example.licenta.utils.ExcelGenerator;
@@ -21,8 +23,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import static org.springframework.http.ResponseEntity.notFound;
-import static org.springframework.http.ResponseEntity.ok;
+import static com.example.licenta.model.AdminAnnouncementType.LICENTA;
+import static com.example.licenta.model.AdminAnnouncementType.STAGIU;
+import static org.springframework.http.ResponseEntity.*;
 
 @RestController
 @RequestMapping("/admins")
@@ -100,6 +103,28 @@ public class AdminController {
         }
     }
 
+    @GetMapping("/announcements")
+    public ResponseEntity<?> getAnnouncements(@RequestParam(value = "type", defaultValue = "ALL") String type) {
+        if (STAGIU.name().equalsIgnoreCase(type)) {
+            return ok(adminService.getAnnouncementsByType(STAGIU));
+        } else if (LICENTA.name().equalsIgnoreCase(type)) {
+            return ok(adminService.getAnnouncementsByType(LICENTA));
+        } else {
+            return ok(adminService.getAnnouncementsByType(AdminAnnouncementType.ALL));
+        }
+    }
+
+    @PostMapping("/announcements/{type}")
+    public ResponseEntity<?> addAnnouncement(@PathVariable String type, @RequestBody AdminAnnouncementRequestDto requestDto) {
+        if (STAGIU.name().equalsIgnoreCase(type)) {
+            return ok(adminService.addAnnouncement(STAGIU, requestDto));
+        } else if (LICENTA.name().equalsIgnoreCase(type)) {
+            return ok(adminService.addAnnouncement(LICENTA, requestDto));
+        }
+        return badRequest().build();
+    }
+
+
     @PostMapping("/save-announcement")
     public ResponseEntity<?> saveEntity(@RequestBody Announcement announcement) {
         adminService.saveAnnouncement(announcement);
@@ -107,7 +132,7 @@ public class AdminController {
     }
 
     @PostMapping("/details")
-    public ResponseEntity<?> saveGlobalDetails(@RequestBody GlobalDetails globalDetails){
+    public ResponseEntity<?> saveGlobalDetails(@RequestBody GlobalDetails globalDetails) {
         adminService.saveGlobalDetails(globalDetails);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
