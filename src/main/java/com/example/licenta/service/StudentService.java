@@ -87,7 +87,7 @@ public class StudentService {
 
         TeacherDetails teacherDetails = getCoordinatorForStudent(studentId);
         practiceDetailsDto.setCoordonator(teacherDetails.getUser().getFirstName()+" "+teacherDetails.getUser().getLastName());
-        practiceDetailsDto.setTasks(taskRepository.findAllByStudentTeacherid(new StudentTeacherId(studentId,teacherDetails.getId())));
+        practiceDetailsDto.setTasks(taskRepository.findAllByStudentTeacherid(new StudentTeacherId(studentId,teacherDetails.getUser().getId())));
 
         return practiceDetailsDto;
     }
