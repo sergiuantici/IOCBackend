@@ -1,5 +1,6 @@
 package com.example.licenta.service;
 import com.example.licenta.model.Message;
+import com.example.licenta.model.User;
 import com.example.licenta.model.dto.MessageDTO;
 import com.example.licenta.repository.MessageRepository;
 import com.example.licenta.repository.UserRepository;
@@ -25,6 +26,10 @@ public class MessageService{
             mesajedto.add(new MessageDTO(m.getId(), m.getFromId(), m.getToId(), m.getText(), m.getTime(), lastnameFromId, lastnameToId, firstnameFromId, firstnameToId));
         }
         return mesajedto;
+    }
+
+    public Message save(Message message) {
+        return messageRepository.save(message);
     }
 
 }

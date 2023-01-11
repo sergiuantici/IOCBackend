@@ -1,4 +1,5 @@
 package com.example.licenta.controller;
+import com.example.licenta.model.Message;
 import com.example.licenta.model.User;
 import com.example.licenta.service.MessageService;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,11 @@ public class MessageController {
     public ResponseEntity<?> findMessagesBetweenTwoUsers(@PathVariable Long idFrom,@PathVariable Long idTo){
         return new ResponseEntity<>(messageService.findAllMessagesBetweenTwoIds(idFrom,idTo),HttpStatus.OK);
 
+    }
+
+    @PostMapping
+    public ResponseEntity<?> save(@RequestBody Message mesaj) {
+        return new ResponseEntity<>(messageService.save(mesaj), HttpStatus.OK);
     }
 
 }
