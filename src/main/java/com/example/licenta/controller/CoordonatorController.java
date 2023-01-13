@@ -98,6 +98,7 @@ public class CoordonatorController {
 
     @PostMapping("/assignment")
     public ResponseEntity<?> saveAssignment(@RequestBody Task task) throws MalformedURLException {
+        System.out.println("intru");
         return ResponseEntity.ok(coordonatorService.saveAssignment(task));
     }
 
