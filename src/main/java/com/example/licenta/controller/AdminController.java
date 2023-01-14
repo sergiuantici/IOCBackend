@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -38,6 +39,14 @@ public class AdminController {
     public AdminController(AdminService adminService, UserService userService) {
         this.adminService = adminService;
         this.userService = userService;
+    }
+    @Resource
+    EmailService emailService;
+    @GetMapping("/email/{email}/{subject}/{message}")
+    public ResponseEntity<?> sendEmail(@PathVariable String email,@PathVariable String subject,@PathVariable String message){
+
+        emailService.sendSimpleMessage(email,subject, message);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/accounts")
