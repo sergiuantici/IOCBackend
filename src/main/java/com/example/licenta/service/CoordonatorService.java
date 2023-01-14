@@ -37,7 +37,8 @@ public class CoordonatorService {
         if (acordRepository.existsById(studentTeacherId)) {
             coordonationRepository.save(new Coordonare(studentTeacherId));
             acordRepository.delete(new Acord(studentTeacherId));
-            TeacherDetails referenceById = teacherRepository.getReferenceById(studentTeacherId.getTeacherId());
+            //TeacherDetails referenceById = teacherRepository.getReferenceById(studentTeacherId.getTeacherId());
+            TeacherDetails referenceById = teacherRepository.findByUserId(studentTeacherId.getTeacherId());
             referenceById.setLocuriLibere(referenceById.getLocuriLibere() - 1);
             teacherRepository.save(referenceById);
         }
