@@ -1,6 +1,6 @@
 package com.example.licenta.utils;
 
-import com.example.licenta.model.SoliciareAcord;
+import com.example.licenta.model.Acord;
 import com.example.licenta.model.dto.StudentStatusDto;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -9,7 +9,6 @@ import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.IOException;
 import java.util.List;
 
 public class ExcelGenerator {
@@ -65,7 +64,7 @@ public class ExcelGenerator {
         for (var entry : studentStatus) {
             Row row = sheet.createRow(rowCount++);
             int columnCount = 0;
-            SoliciareAcord lastAgreement = null;
+            Acord lastAgreement = null;
             if (!entry.agreementRequests().isEmpty()) {
                 lastAgreement = entry.agreementRequests().get(entry.agreementRequests().size() - 1);
             }

@@ -6,13 +6,11 @@ import com.example.licenta.model.*;
 import com.example.licenta.model.dto.EvaluationDto;
 import com.example.licenta.model.dto.PracticeDetailsDto;
 import com.example.licenta.repository.*;
-import com.example.licenta.requests.SolicitareAcordRequest;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class StudentService {
@@ -29,14 +27,12 @@ public class StudentService {
     @Resource
     GlobalDetailsRepository globalDetailsRepository;
     @Resource
-    SolicitareAcordRepository solicitareAcordRepository;
-    @Resource
     StudentRepository studentRepository;
     @Resource
     TaskRepository taskRepository;
 
     private Long getNumberOfSentRequests(Long studentId) {
-        return solicitareAcordRepository
+        return acordRepository
                 .findAll()
                 .stream()
                 .filter(x -> x.getTime().isAfter(LocalDateTime.now().minusWeeks(1))
@@ -45,17 +41,17 @@ public class StudentService {
                 .count();
     }
 
-    public void sendRequest(SolicitareAcordRequest solicitareAcordRequest) throws RequestsLimitReachedException {
-        Long countOfRequestsMade = getNumberOfSentRequests(solicitareAcordRequest.getStudentId());
+    public void sendRequest(Acord solicitareAcordRequest) throws RequestsLimitReachedException {
+        Long countOfRequestsMade = getNumberOfSentRequests(solicitareAcordRequest.getId().getStudentId());
 
         if (countOfRequestsMade >= 3) {
             throw new RequestsLimitReachedException("This student has already made 3 requests this week.");
         }
 
-        StudentTeacherId studentTeacherId = new StudentTeacherId(solicitareAcordRequest.getStudentId(),
-                solicitareAcordRequest.getTeacherId());
-        String fileURL = solicitareAcordRequest.getFileURL();
-        solicitareAcordRepository.save(new SoliciareAcord(studentTeacherId, fileURL, LocalDateTime.now()));
+        StudentTeacherId studentTeacherId = new StudentTeacherId(solicitareAcordRequest.getId().getStudentId(),
+                solicitareAcordRequest.getId().getTeacherId());
+        String fileURL = solicitareAcordRequest.getDocumentUrl();
+        acordRepository.save(new Acord(studentTeacherId, fileURL, LocalDateTime.now()));
     }
 
     public Long getRequestCount(Long studentId) {
