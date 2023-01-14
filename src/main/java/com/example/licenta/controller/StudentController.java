@@ -2,8 +2,8 @@ package com.example.licenta.controller;
 
 import com.example.licenta.exceptions.RequestsLimitReachedException;
 import com.example.licenta.exceptions.StudentNotFoundException;
+import com.example.licenta.model.Acord;
 import com.example.licenta.model.dto.TaskDocumentDto;
-import com.example.licenta.requests.SolicitareAcordRequest;
 import com.example.licenta.service.StudentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +19,7 @@ public class StudentController {
     private StudentService studentService;
 
     @PostMapping("/request")
-    public ResponseEntity<?> sendRequest(@RequestBody SolicitareAcordRequest solicitareAcordRequest) {
+    public ResponseEntity<?> sendRequest(@RequestBody Acord solicitareAcordRequest) {
         try {
             studentService.sendRequest(solicitareAcordRequest);
             return new ResponseEntity<>(true, HttpStatus.OK);

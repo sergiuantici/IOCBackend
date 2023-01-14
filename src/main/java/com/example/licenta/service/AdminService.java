@@ -21,16 +21,16 @@ import java.util.List;
 public class AdminService {
 
     private final UserRepository userRepository;
-    private final SolicitareAcordRepository solicitareAcordRepository;
+    private final AcordRepository acordRepository;
     private final CoordonationRepository coordonationRepository;
     private final AnnouncementRepository announcementRepository;
     private final GlobalDetailsRepository globalDetailsRepository;
     private final AdminAnnouncementRepository adminAnnouncementRepository;
 
-    public AdminService(UserRepository userRepository, SolicitareAcordRepository solicitareAcordRepository,
+    public AdminService(UserRepository userRepository, AcordRepository acordRepository,
                         CoordonationRepository coordonationRepository, AnnouncementRepository announcementRepository, GlobalDetailsRepository globalDetailsRepository, AdminAnnouncementRepository adminAnnouncementRepository) {
         this.userRepository = userRepository;
-        this.solicitareAcordRepository = solicitareAcordRepository;
+        this.acordRepository = acordRepository;
         this.coordonationRepository = coordonationRepository;
         this.announcementRepository = announcementRepository;
         this.globalDetailsRepository = globalDetailsRepository;
@@ -49,7 +49,7 @@ public class AdminService {
     }
 
     private StudentStatusDto getStudentStatusDto(User student) {
-        var agreementRequests = solicitareAcordRepository.findAllById_StudentId(student.getId());
+        var agreementRequests = acordRepository.findAllById_StudentId(student.getId());
 
         // In case the student do not have a coordinator, this field will be null
         var coordinatorId = coordonationRepository.findFirstById_StudentId(student.getId());
