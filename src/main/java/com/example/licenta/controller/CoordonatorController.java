@@ -51,6 +51,11 @@ public class CoordonatorController {
         return new ResponseEntity<>(coordonatorService.getStudents(teacherId), HttpStatus.OK);
     }
 
+    @GetMapping("/studentsAcc/{teacherId}")
+    public ResponseEntity<?> findAllAccStudents(@PathVariable Long teacherId) {
+
+        return new ResponseEntity<>(coordonatorService.getStudentsAccepted(teacherId), HttpStatus.OK);
+    }
     // @GetMapping("/acord")
     // public ResponseEntity<?> findAllAcords() {
     // List<User> users=coordonatorService.getStudents();
@@ -100,6 +105,12 @@ public class CoordonatorController {
     public ResponseEntity<?> saveAssignment(@RequestBody Task task) throws MalformedURLException {
         System.out.println("intru");
         return ResponseEntity.ok(coordonatorService.saveAssignment(task));
+    }
+
+    @GetMapping("/tasks/{id}")
+    public ResponseEntity<?> getTasks(@PathVariable Long id)
+    {
+        return new ResponseEntity<>(coordonatorService.getTasks(id),HttpStatus.OK);
     }
 
     @GetMapping("/announcement")

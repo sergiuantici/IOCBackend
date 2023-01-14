@@ -66,6 +66,11 @@ public class CoordonatorService {
                 .map(e -> e.getId().getStudentId());
         return userRepository.findAllById(longStream.collect(Collectors.toList()));
     }
+    public List<User> getStudentsAccepted(Long teacherId) {
+        Stream<Long> longStream = coordonationRepository.findByTeacherId(teacherId).stream()
+                .map(e -> e.getId().getStudentId());
+        return userRepository.findAllById(longStream.collect(Collectors.toList()));
+    }
 
     public List<TeacherDetails> getTeachers() {
         return teacherRepository.findAll();
@@ -100,5 +105,9 @@ public class CoordonatorService {
 
     public List<Announcement> getAnnouncements() {
         return announcementRepository.findAll();
+    }
+
+    public List<Task> getTasks(Long teacherId) {
+        return taskRepository.findAllByTeacherIdWithDocument(teacherId);
     }
 }
