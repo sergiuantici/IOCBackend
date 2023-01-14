@@ -107,12 +107,11 @@ public class AdminService {
 
     public List<StudentsGradesDto> getStudentsGrades() {
         List<StudentDetails> studentsDetails = new ArrayList<>(this.studentRepository.findAll());
-        List<StudentsGradesDto> studentsGradesDtos = new ArrayList<>();
-        for (StudentDetails studentDetails : studentsDetails) {
-            studentsGradesDtos.add(new StudentsGradesDto(studentDetails.getNormalGrade(), studentDetails.getReTakeGrade(),
-                    studentDetails.getUser().getFirstName(), studentDetails.getUser().getLastName()));
-        }
-        return studentsGradesDtos;
+        return studentsDetails.stream()
+                .map(studentDetails ->
+                        new StudentsGradesDto(studentDetails.getNormalGrade(), studentDetails.getReTakeGrade(),
+                                studentDetails.getUser().getFirstName(), studentDetails.getUser().getLastName()))
+                .collect(Collectors.toList());
     }
 
 
