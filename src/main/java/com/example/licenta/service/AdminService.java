@@ -2,10 +2,7 @@ package com.example.licenta.service;
 
 import com.example.licenta.exceptions.GeneralAdminException;
 import com.example.licenta.model.*;
-import com.example.licenta.model.dto.AdminAnnouncementRequestDto;
-import com.example.licenta.model.dto.AdminAnnouncementResponseDto;
-import com.example.licenta.model.dto.DetailedStudentReportDto;
-import com.example.licenta.model.dto.StudentStatusDto;
+import com.example.licenta.model.dto.*;
 import com.example.licenta.repository.*;
 import com.example.licenta.utils.ExcelHelper;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -26,15 +25,17 @@ public class AdminService {
     private final AnnouncementRepository announcementRepository;
     private final GlobalDetailsRepository globalDetailsRepository;
     private final AdminAnnouncementRepository adminAnnouncementRepository;
+    private final StudentRepository studentRepository;
 
     public AdminService(UserRepository userRepository, AcordRepository acordRepository,
-                        CoordonationRepository coordonationRepository, AnnouncementRepository announcementRepository, GlobalDetailsRepository globalDetailsRepository, AdminAnnouncementRepository adminAnnouncementRepository) {
+                        CoordonationRepository coordonationRepository, AnnouncementRepository announcementRepository, GlobalDetailsRepository globalDetailsRepository, AdminAnnouncementRepository adminAnnouncementRepository, StudentRepository studentRepository) {
         this.userRepository = userRepository;
         this.acordRepository = acordRepository;
         this.coordonationRepository = coordonationRepository;
         this.announcementRepository = announcementRepository;
         this.globalDetailsRepository = globalDetailsRepository;
         this.adminAnnouncementRepository = adminAnnouncementRepository;
+        this.studentRepository = studentRepository;
     }
 
     public List<User> processExcel(MultipartFile file) throws IOException {
@@ -103,5 +104,16 @@ public class AdminService {
         var result = adminAnnouncementRepository.save(entity);
         return new AdminAnnouncementResponseDto(result.getMessage(), result.getCreated());
     }
+
+    public List<StudentsGradesDto> getStudentsGrades() {
+        List<StudentDetails> studentsDetails = new ArrayList<>(this.studentRepository.findAll());
+        List<StudentsGradesDto> studentsGradesDtos = new ArrayList<>();
+        for (StudentDetails studentDetails : studentsDetails) {
+            studentsGradesDtos.add(new StudentsGradesDto(studentDetails.getNormalGrade(), studentDetails.getReTakeGrade(),
+                    studentDetails.getUser().getFirstName(), studentDetails.getUser().getLastName()));
+        }
+        return studentsGradesDtos;
+    }
+
 
 }

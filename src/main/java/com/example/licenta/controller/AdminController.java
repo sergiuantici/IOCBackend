@@ -146,4 +146,9 @@ public class AdminController {
         adminService.saveGlobalDetails(globalDetails);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
+    @GetMapping("/grades")
+    public ResponseEntity<?> getStudentsGrades(){
+        return new ResponseEntity<>(adminService.getStudentsGrades(), HttpStatus.OK);
+    }
 }
