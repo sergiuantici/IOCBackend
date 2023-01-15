@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -30,6 +31,19 @@ public class StudentService {
     StudentRepository studentRepository;
     @Resource
     TaskRepository taskRepository;
+
+    public List<StudentDetails> getStudents() {
+        return studentRepository.findAll();
+    }
+
+    public List<StudentDetails> getStudentsWithoutCoordinator() {
+        List<StudentDetails> studentDetailsList = new ArrayList<>();
+        for (StudentDetails studentDetails : getStudents()) {
+            if (!isCoordinated(studentDetails.getUser().getId()))
+                studentDetailsList.add(studentDetails);
+        }
+        return studentDetailsList;
+    }
 
     private Long getNumberOfSentRequests(Long studentId) {
         return acordRepository
@@ -79,22 +93,22 @@ public class StudentService {
         StudentDetails studentDetails = studentRepository.findByUserId(studentId);
 
         practiceDetailsDto.setExecutedHours(studentDetails.getExecutedHours());
-        practiceDetailsDto.setRemainingHours(globalDetails.getPracticeHoursTotal()-studentDetails.getExecutedHours());
+        practiceDetailsDto.setRemainingHours(globalDetails.getPracticeHoursTotal() - studentDetails.getExecutedHours());
 
         TeacherDetails teacherDetails = getCoordinatorForStudent(studentId);
-        practiceDetailsDto.setCoordonator(teacherDetails.getUser().getFirstName()+" "+teacherDetails.getUser().getLastName());
-        practiceDetailsDto.setTasks(taskRepository.findAllByStudentTeacherid(new StudentTeacherId(studentId,teacherDetails.getUser().getId())));
+        practiceDetailsDto.setCoordonator(teacherDetails.getUser().getFirstName() + " " + teacherDetails.getUser().getLastName());
+        practiceDetailsDto.setTasks(taskRepository.findAllByStudentTeacherid(new StudentTeacherId(studentId, teacherDetails.getUser().getId())));
 
         return practiceDetailsDto;
     }
 
-    public void turnInTask(Long taskId,String documentUrl){
+    public void turnInTask(Long taskId, String documentUrl) {
         Task task = taskRepository.findById(taskId).get();
         task.getDocumentUrls().add(documentUrl);
         taskRepository.save(task);
     }
 
-    public EvaluationDto getEvaluation(Long studentId){
+    public EvaluationDto getEvaluation(Long studentId) {
         EvaluationDto evaluationDto = new EvaluationDto();
         StudentDetails studentDetails = studentRepository.findByUserId(studentId);
         evaluationDto.setNormalGrade(studentDetails.getNormalGrade());

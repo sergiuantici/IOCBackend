@@ -28,6 +28,12 @@ public class CoordonatorController {
     @Resource
     private UserService userService;
 
+    @PostMapping("/receive-student/{studentId}/{teacherId}")
+    public ResponseEntity<?> receiveStudent(@PathVariable Long studentId, @PathVariable Long teacherId) {
+        coordonatorService.receiveStudent(studentId, teacherId);
+        return new ResponseEntity<>("OK", HttpStatus.ACCEPTED);
+    }
+
     @PostMapping("/accept")
     public ResponseEntity<?> acceptRequest(@RequestBody StudentTeacherId studentTeacherId) {
         coordonatorService.acceptRequest(studentTeacherId);
