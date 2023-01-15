@@ -1,10 +1,7 @@
 package com.example.licenta.utils;
 
 import com.example.licenta.model.User;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -55,7 +52,13 @@ public class ExcelHelper {
                         case 1 -> user.setFirstName(currentCell.getStringCellValue());
                         case 2 -> user.setLastName(currentCell.getStringCellValue());
                         case 3 -> user.setEmail(currentCell.getStringCellValue());
-                        case 4 -> user.setPassword(currentCell.getStringCellValue());
+                        case 4 -> {
+                            if (currentCell.getCellType() == CellType.NUMERIC) {
+                                user.setPassword(String.valueOf(currentCell.getNumericCellValue()));
+                            } else {
+                                user.setPassword(currentCell.getStringCellValue());
+                            }
+                        }
                         case 5 -> user.setRole(currentCell.getStringCellValue());
                     }
 
