@@ -77,4 +77,9 @@ public class StudentController {
     public ResponseEntity<?> getEvaluationCriteria(@PathVariable Long studentId) {
         return new ResponseEntity<>(studentService.getEvaluation(studentId), HttpStatus.OK);
     }
+
+    @GetMapping("/announcements-admin")
+    public ResponseEntity<?> getEvaluationCriteria() {
+        return new ResponseEntity<>(studentService.getAnnouncements(), HttpStatus.OK);
+    }
 }

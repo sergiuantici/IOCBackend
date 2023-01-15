@@ -9,6 +9,7 @@ import com.example.licenta.repository.*;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.xml.crypto.Data;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,8 @@ public class StudentService {
     StudentRepository studentRepository;
     @Resource
     TaskRepository taskRepository;
+    @Resource
+    AdminAnnouncementRepository adminAnnouncementRepository;
 
     public List<StudentDetails> getStudents() {
         return studentRepository.findAll();
@@ -81,8 +84,8 @@ public class StudentService {
         return teacherRepository.findByUserId(teacherId);
     }
 
-    public List<Announcement> getAnnouncements() {
-        return announcementRepository.findAll();
+    public List<AdminAnnouncement> getAnnouncements() {
+        return adminAnnouncementRepository.findAll();
     }
 
     public PracticeDetailsDto getLatestDetails(Long studentId) throws StudentNotFoundException {
