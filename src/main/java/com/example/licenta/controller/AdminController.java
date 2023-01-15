@@ -141,9 +141,14 @@ public class AdminController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PostMapping("/details")
+    @PostMapping("/save-global-details")
     public ResponseEntity<?> saveGlobalDetails(@RequestBody GlobalDetails globalDetails) {
         adminService.saveGlobalDetails(globalDetails);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @GetMapping("/global-details")
+    public ResponseEntity<?> getGlobalDetails() {
+        return ok(adminService.getGlobalDetails());
     }
 }

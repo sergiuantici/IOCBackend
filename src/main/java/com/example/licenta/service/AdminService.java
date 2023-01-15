@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -78,7 +79,15 @@ public class AdminService {
     }
 
     public void saveGlobalDetails(GlobalDetails globalDetails) {
+        if (!globalDetailsRepository.findAll().isEmpty()) //mai intai sterg tot ce in db
+            globalDetailsRepository.deleteAll();
+
+        //adaug din nou in db
         globalDetailsRepository.save(globalDetails);
+    }
+
+    public GlobalDetails getGlobalDetails(){
+        return globalDetailsRepository.findAll().get(0); //returneaza primul element din db
     }
 
     public List<AdminAnnouncementResponseDto> getAnnouncementsByType(AdminAnnouncementType type) {
