@@ -45,6 +45,14 @@ public class CoordonatorService {
 
     }
 
+    public void receiveStudent(Long studentId, Long teacherId) {
+        StudentTeacherId studentTeacherId = new StudentTeacherId(studentId, teacherId);
+        coordonationRepository.save(new Coordonare(studentTeacherId));
+        TeacherDetails referenceById = teacherRepository.findByUserId(studentTeacherId.getTeacherId());
+        referenceById.setLocuriLibere(referenceById.getLocuriLibere() - 1);
+        teacherRepository.save(referenceById);
+    }
+
     public Acord getAcord(StudentTeacherId studentTeacherId) {
         Optional<Acord> byId = acordRepository.findById(studentTeacherId);
         if (byId.isEmpty())

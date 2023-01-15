@@ -18,6 +18,16 @@ public class StudentController {
     @Resource
     private StudentService studentService;
 
+    @GetMapping("/get-all")
+    public ResponseEntity<?> getStudents() {
+        return new ResponseEntity<>(studentService.getStudents(), HttpStatus.OK);
+    }
+
+    @GetMapping("/without-coordinator")
+    public ResponseEntity<?> getStudentsWithoutCoordinator() {
+        return new ResponseEntity<>(studentService.getStudentsWithoutCoordinator(), HttpStatus.OK);
+    }
+
     @PostMapping("/request")
     public ResponseEntity<?> sendRequest(@RequestBody Acord solicitareAcordRequest) {
         try {
@@ -49,22 +59,22 @@ public class StudentController {
     }
 
     @GetMapping("/{studentId}/stage-details")
-    public ResponseEntity<?> getLatestStageDetails(@PathVariable Long studentId){
-        try{
-            return new ResponseEntity<>(studentService.getLatestDetails(studentId),HttpStatus.OK);
-        }catch (StudentNotFoundException ex){
-            return new ResponseEntity<>(ex.getMessage(),HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> getLatestStageDetails(@PathVariable Long studentId) {
+        try {
+            return new ResponseEntity<>(studentService.getLatestDetails(studentId), HttpStatus.OK);
+        } catch (StudentNotFoundException ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
     @PutMapping("/task/{taskId}")
-    public ResponseEntity<?> turnInTask(@RequestBody TaskDocumentDto taskDocumentDto, @PathVariable Long taskId){
-        studentService.turnInTask(taskId,taskDocumentDto.getDocumentUrl());
+    public ResponseEntity<?> turnInTask(@RequestBody TaskDocumentDto taskDocumentDto, @PathVariable Long taskId) {
+        studentService.turnInTask(taskId, taskDocumentDto.getDocumentUrl());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/{studentId}/criteria")
-    public ResponseEntity<?> getEvaluationCriteria(@PathVariable Long studentId){
-        return new ResponseEntity<>(studentService.getEvaluation(studentId),HttpStatus.OK);
+    public ResponseEntity<?> getEvaluationCriteria(@PathVariable Long studentId) {
+        return new ResponseEntity<>(studentService.getEvaluation(studentId), HttpStatus.OK);
     }
 }
