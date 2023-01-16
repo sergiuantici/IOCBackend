@@ -67,7 +67,8 @@ public class StudentService {
 
     public void sendRequest(Acord solicitareAcordRequest) throws RequestsLimitReachedException {
         Long countOfRequestsMade = getNumberOfSentRequests(solicitareAcordRequest.getId().getStudentId());
-
+        if(isCoordinated(solicitareAcordRequest.getId().getStudentId()))
+            throw new RequestsLimitReachedException("This student already has a coordinator.");
         if (countOfRequestsMade >= 3) {
             throw new RequestsLimitReachedException("This student has already made 3 requests this week.");
         }
