@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
 	List<Task> findAllByStudentTeacherid(StudentTeacherId id);
-	@Query("select t from Task t where t.id = :teacherId " +
+	@Query("select t from Task t where t.studentTeacherid.teacherId = :teacherId " +
 			"and t.documentUrls is not empty")
 	List<Task> findAllByTeacherIdWithDocument(@Param("teacherId")Long teacherId);
 }
