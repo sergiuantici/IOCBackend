@@ -21,4 +21,11 @@ public class Message {
     Long fromId,toId;
     String text;
     LocalDateTime time;
+
+    public Message(Long fromId, Long toId, String text, LocalDateTime time) {
+        this.fromId = fromId;
+        this.toId = toId;
+        this.text = text;
+        this.time = time;
+    }
 }
