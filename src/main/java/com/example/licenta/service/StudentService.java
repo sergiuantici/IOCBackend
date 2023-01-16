@@ -139,10 +139,10 @@ public class StudentService {
         List<StatusCerereDto> statusDtos = new ArrayList<>();
 
         List<Acord> acords = acordRepository.findAllById_StudentId(studentId);
-        for (Acord acord : acords){
+        for (Acord acord : acords) {
             StatusCerereDto status = new StatusCerereDto();
 
-            if(coordonationRepository.existsByStudentId(studentId))
+            if (coordonationRepository.existsByStudentId(studentId))
                 status.setStatusCerereType(StatusCerereType.APPROVED);
             else
                 status.setStatusCerereType(StatusCerereType.PENDING);
@@ -153,6 +153,7 @@ public class StudentService {
             statusDtos.add(status);
         }
         return statusDtos;
+    }
 
     public StudentMessagesResponseDto getMessagesForStudentAndTeacher(Long studentId) throws NoCoordinatorException {
         Optional<User> student = userRepository.findById(studentId);
