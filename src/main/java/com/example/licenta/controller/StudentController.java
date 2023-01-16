@@ -98,4 +98,9 @@ public class StudentController {
     public ResponseEntity<?> getEvaluationCriteria() {
         return new ResponseEntity<>(studentService.getAnnouncements(), HttpStatus.OK);
     }
+
+    @GetMapping("/status-cereri/{studentId}")
+    public ResponseEntity<?> getStatusCereri(@PathVariable Long studentId) {
+        return new ResponseEntity<>(studentService.getStatusCereri(studentId), HttpStatus.OK);
+    }
 }

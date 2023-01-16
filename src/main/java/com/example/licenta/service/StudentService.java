@@ -6,8 +6,11 @@ import com.example.licenta.exceptions.StudentNotFoundException;
 import com.example.licenta.model.*;
 import com.example.licenta.model.dto.EvaluationDto;
 import com.example.licenta.model.dto.PracticeDetailsDto;
+import com.example.licenta.model.dto.StatusCerereDto;
+import com.example.licenta.model.dto.StatusCerereType;
 import com.example.licenta.model.dto.StudentMessagesResponseDto;
 import com.example.licenta.repository.*;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -130,6 +133,26 @@ public class StudentService {
         return evaluationDto;
     }
 
+
+
+    public List<StatusCerereDto> getStatusCereri(Long studentId) {
+        List<StatusCerereDto> statusDtos = new ArrayList<>();
+
+        List<Acord> acords = acordRepository.findAllById_StudentId(studentId);
+        for (Acord acord : acords){
+            StatusCerereDto status = new StatusCerereDto();
+
+            if(coordonationRepository.existsByStudentId(studentId))
+                status.setStatusCerereType(StatusCerereType.APPROVED);
+            else
+                status.setStatusCerereType(StatusCerereType.PENDING);
+
+            Long teacherId = acord.getId().getTeacherId();
+            User teacher = userRepository.findAll().stream().filter(user -> teacherId == user.getId()).findAny().orElse(null);
+            status.setTeacherName(teacher.getFirstName() + " " + teacher.getLastName());
+            statusDtos.add(status);
+        }
+        return statusDtos;
 
     public StudentMessagesResponseDto getMessagesForStudentAndTeacher(Long studentId) throws NoCoordinatorException {
         Optional<User> student = userRepository.findById(studentId);
