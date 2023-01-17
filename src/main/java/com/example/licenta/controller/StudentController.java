@@ -69,6 +69,11 @@ public class StudentController {
         }
     }
 
+    @GetMapping("/{studentId}/adminMessages")
+    public ResponseEntity<?> getAdminMessages(@PathVariable Long studentId){
+        return new ResponseEntity<>(studentService.getAdminMessagesForStudent(studentId), HttpStatus.OK);
+    }
+
     @PostMapping("/messages/sendMessage")
     public ResponseEntity<?> sendMessage(@RequestBody SendMessageRequestDto sendMessageRequest) {
         return new ResponseEntity<>(studentService.sendMessage(sendMessageRequest.getFromId(), sendMessageRequest.getToId(), sendMessageRequest.getMessage()), HttpStatus.OK);

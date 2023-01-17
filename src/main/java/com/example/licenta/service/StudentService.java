@@ -4,11 +4,7 @@ import com.example.licenta.exceptions.NoCoordinatorException;
 import com.example.licenta.exceptions.RequestsLimitReachedException;
 import com.example.licenta.exceptions.StudentNotFoundException;
 import com.example.licenta.model.*;
-import com.example.licenta.model.dto.EvaluationDto;
-import com.example.licenta.model.dto.PracticeDetailsDto;
-import com.example.licenta.model.dto.StatusCerereDto;
-import com.example.licenta.model.dto.StatusCerereType;
-import com.example.licenta.model.dto.StudentMessagesResponseDto;
+import com.example.licenta.model.dto.*;
 import com.example.licenta.repository.*;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -170,5 +166,12 @@ public class StudentService {
     public boolean sendMessage(Long fromId, Long toId, String message) {
         messageRepository.save(new Message(fromId, toId, message, LocalDateTime.now()));
         return true;
+    }
+
+    public GetAdminMessagesForStudentResponseDto getAdminMessagesForStudent(Long studentId) {
+        User student = userRepository.findById(studentId).get();
+        Long adminId = userRepository.findAdminAccount().getId();
+        List<Message> messages = messageRepository.findMessagesForStudentAndTeacher(studentId, adminId);
+        return new GetAdminMessagesForStudentResponseDto(student,adminId,messages);
     }
 }
