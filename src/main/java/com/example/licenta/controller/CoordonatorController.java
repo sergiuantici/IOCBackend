@@ -1,5 +1,6 @@
 package com.example.licenta.controller;
 
+import com.example.licenta.exceptions.StudentNotFoundException;
 import com.example.licenta.model.Acord;
 import com.example.licenta.model.PracticeDocument;
 import com.example.licenta.model.StudentTeacherId;
@@ -123,4 +124,5 @@ public class CoordonatorController {
     public ResponseEntity<?> getAnnouncement() {
         return new ResponseEntity<>(coordonatorService.getAnnouncements(), HttpStatus.OK);
     }
+
 }
