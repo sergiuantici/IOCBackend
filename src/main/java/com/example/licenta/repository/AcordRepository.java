@@ -14,5 +14,7 @@ public interface AcordRepository extends JpaRepository<Acord, StudentTeacherId> 
             "from Acord e where e.id.teacherId=:teacherId")
     List<Acord> findAllByTeacherId(@Param("teacherId") Long teacherId);
 
-    List<Acord> findAllById_StudentId(Long studentId);
+    @Query("select new Acord(e.id,e.documentUrl,e.time) " +
+            "from Acord e where e.id.studentId=:studentId")
+    List<Acord> findAllById_StudentId(@Param("studentId") Long studentId);
 }
