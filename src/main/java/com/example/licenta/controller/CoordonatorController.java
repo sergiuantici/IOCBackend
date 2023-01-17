@@ -4,6 +4,7 @@ import com.example.licenta.model.Acord;
 import com.example.licenta.model.PracticeDocument;
 import com.example.licenta.model.StudentTeacherId;
 import com.example.licenta.model.Task;
+import com.example.licenta.model.dto.GetCoordonatorMessagesRequestDto;
 import com.example.licenta.model.dto.PracticeDocumentDTO;
 import com.example.licenta.service.CoordonatorService;
 import com.example.licenta.service.UserService;
@@ -95,6 +96,16 @@ public class CoordonatorController {
         return new ResponseEntity<>(coordonatorService.getAcceptedStudents(id), HttpStatus.OK);
     }
 
+    @GetMapping("/{id}/contacts")
+    public ResponseEntity<?> getContacts(@PathVariable Long id) {
+        return new ResponseEntity<>(coordonatorService.getCoordonatorContacts(id), HttpStatus.OK);
+    }
+
+    @PostMapping("/messages")
+    public ResponseEntity<?> getMessages(@RequestBody GetCoordonatorMessagesRequestDto getCoordonatorMessagesRequest) {
+        return new ResponseEntity<>(coordonatorService.getCoordonatorMessages(getCoordonatorMessagesRequest.getTeacherId(), getCoordonatorMessagesRequest.getStudentId()), HttpStatus.OK);
+    }
+
     @PostMapping("/practiceDocument")
     public ResponseEntity<?> savePracticeDocument(@RequestBody PracticeDocumentDTO practiceDocumentDTO)
             throws MalformedURLException {
@@ -123,4 +134,6 @@ public class CoordonatorController {
     public ResponseEntity<?> getAnnouncement() {
         return new ResponseEntity<>(coordonatorService.getAnnouncements(), HttpStatus.OK);
     }
+
+
 }

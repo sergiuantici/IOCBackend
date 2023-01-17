@@ -1,6 +1,7 @@
 package com.example.licenta.service;
 
 import com.example.licenta.model.*;
+import com.example.licenta.model.dto.GetCoordonatorContactsResponseDto;
 import com.example.licenta.repository.*;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,8 @@ public class CoordonatorService {
     PracticeDocumentRepository practiceDocumentRepository;
     @Resource
     AnnouncementRepository announcementRepository;
+    @Resource
+    MessageRepository messageRepository;
 
     private final TaskRepository taskRepository;
 
@@ -103,6 +106,12 @@ public class CoordonatorService {
         return userRepository.findAllById(studentsForTeacherStream.collect(Collectors.toList()));
     }
 
+    public GetCoordonatorContactsResponseDto getCoordonatorContacts(Long teacherId){
+        User teacher = userRepository.findById(teacherId).get();
+        List<User> students = getAcceptedStudents(teacherId);
+        return new GetCoordonatorContactsResponseDto(teacher, students);
+    }
+
     public PracticeDocument savePracticeDocument(PracticeDocument practiceDocument) {
         return practiceDocumentRepository.save(practiceDocument);
     }
@@ -117,5 +126,9 @@ public class CoordonatorService {
 
     public List<Task> getTasks(Long teacherId) {
         return taskRepository.findAllByTeacherIdWithDocument(teacherId);
+    }
+
+    public List<Message> getCoordonatorMessages(Long teacherId, Long studentId) {
+        return messageRepository.findMessagesForStudentAndTeacher(studentId, teacherId);
     }
 }
