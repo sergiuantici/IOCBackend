@@ -1,8 +1,10 @@
 package com.example.licenta.controller;
 
+import com.example.licenta.exceptions.NoCoordinatorException;
 import com.example.licenta.exceptions.RequestsLimitReachedException;
 import com.example.licenta.exceptions.StudentNotFoundException;
 import com.example.licenta.model.Acord;
+import com.example.licenta.model.dto.SendMessageRequestDto;
 import com.example.licenta.model.dto.TaskDocumentDto;
 import com.example.licenta.service.StudentService;
 import org.springframework.http.HttpStatus;
@@ -58,6 +60,25 @@ public class StudentController {
         return new ResponseEntity<>(studentService.getAnnouncements(), HttpStatus.OK);
     }
 
+    @GetMapping("/{studentId}/messages")
+    public ResponseEntity<?> getMessages(@PathVariable Long studentId) {
+        try {
+            return new ResponseEntity<>(studentService.getMessagesForStudentAndTeacher(studentId), HttpStatus.OK);
+        } catch (NoCoordinatorException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/{studentId}/adminMessages")
+    public ResponseEntity<?> getAdminMessages(@PathVariable Long studentId){
+        return new ResponseEntity<>(studentService.getAdminMessagesForStudent(studentId), HttpStatus.OK);
+    }
+
+    @PostMapping("/messages/sendMessage")
+    public ResponseEntity<?> sendMessage(@RequestBody SendMessageRequestDto sendMessageRequest) {
+        return new ResponseEntity<>(studentService.sendMessage(sendMessageRequest.getFromId(), sendMessageRequest.getToId(), sendMessageRequest.getMessage()), HttpStatus.OK);
+    }
+
     @GetMapping("/{studentId}/stage-details")
     public ResponseEntity<?> getLatestStageDetails(@PathVariable Long studentId) {
         try {
@@ -81,5 +102,10 @@ public class StudentController {
     @GetMapping("/announcements-admin")
     public ResponseEntity<?> getEvaluationCriteria() {
         return new ResponseEntity<>(studentService.getAnnouncements(), HttpStatus.OK);
+    }
+
+    @GetMapping("/status-cereri/{studentId}")
+    public ResponseEntity<?> getStatusCereri(@PathVariable Long studentId) {
+        return new ResponseEntity<>(studentService.getStatusCereri(studentId), HttpStatus.OK);
     }
 }
