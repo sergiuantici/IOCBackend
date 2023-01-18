@@ -157,4 +157,9 @@ public class AdminController {
 
         return new ResponseEntity<>(adminService.getStudentsGrades(), HttpStatus.OK);
     }
+
+    @GetMapping("/contacts")
+    public ResponseEntity<?> getContacts() {
+        return new ResponseEntity<>(adminService.getAdminContacts(), HttpStatus.OK);
+    }
 }

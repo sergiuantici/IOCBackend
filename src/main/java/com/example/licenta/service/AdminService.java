@@ -123,4 +123,7 @@ public class AdminService {
     }
 
 
+    public List<User> getAdminContacts() {
+        return userRepository.findAllUsers();
+    }
 }
