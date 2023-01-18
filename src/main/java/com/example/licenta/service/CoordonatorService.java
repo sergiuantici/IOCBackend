@@ -30,6 +30,9 @@ public class CoordonatorService {
     @Resource
     MessageRepository messageRepository;
 
+    @Resource
+    AdminAnnouncementRepository adminAnnouncementRepository;
+
     private final TaskRepository taskRepository;
 
     public CoordonatorService(TaskRepository taskRepository) {
@@ -120,15 +123,15 @@ public class CoordonatorService {
         return taskRepository.save(task);
     }
 
-    public List<Announcement> getAnnouncements() {
-        return announcementRepository.findAll();
+    public List<AdminAnnouncement> getAnnouncements() {
+        return adminAnnouncementRepository.findAll();
     }
 
     public List<Task> getTasks(Long teacherId) {
         return taskRepository.findAllByTeacherIdWithDocument(teacherId);
     }
-
     public List<Message> getCoordonatorMessages(Long teacherId, Long studentId) {
         return messageRepository.findMessagesForStudentAndTeacher(studentId, teacherId);
     }
+
 }
